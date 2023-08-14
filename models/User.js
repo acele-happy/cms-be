@@ -34,7 +34,7 @@ const teacherSchema = mongoose.Schema({
     },
     role:{
         type: String,
-        enum:['TEACHER','HOD','CP','FINANCE'],
+        enum:['ACADEMICS','TEACHER','HOD','CP','FINANCE'],
         required: true
     }
 })
