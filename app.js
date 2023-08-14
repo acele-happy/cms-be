@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const teacherRoutes = require('./routes/teacherRoutes')
+const teacherRoutes = require('./routes/userRoutes')
 require('dotenv').config()
 require('./models/dbConnect')
 

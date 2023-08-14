@@ -31,8 +31,12 @@ const teacherSchema = mongoose.Schema({
     salary:{
         type: Number,
         required: true
+    },
+    role:{
+        type: String,
+        enum:['TEACHER','HOD','CP','FINANCE'],
+        required: true
     }
-
 })
 
 const Teacher = new mongoose.model('Teacher',teacherSchema)
