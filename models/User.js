@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const teacherSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     fullName :{
         type: String,
         required: true
@@ -34,10 +34,10 @@ const teacherSchema = mongoose.Schema({
     },
     role:{
         type: String,
-        enum:['TEACHER','HOD','CP','FINANCE'],
+        enum:['ACADEMICS','TEACHER','HOD','CP','FINANCE'],
         required: true
     }
 })
 
-const Teacher = new mongoose.model('Teacher',teacherSchema)
-module.exports = Teacher
+const User = new mongoose.model('User',userSchema)
+module.exports = User
