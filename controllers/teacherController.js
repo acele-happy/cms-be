@@ -14,7 +14,9 @@ exports.getAllTeachers = async(req,res)=>{
 exports.registerTeacher = async(req,res)=>{
     const teacher = req.body
 
-    await teacher
+    const newTeacher = await new Teacher(teacher) 
+
+    await newTeacher
     .save()
     .then((newteacher)=>{
         return res.status(201).send(newteacher)
