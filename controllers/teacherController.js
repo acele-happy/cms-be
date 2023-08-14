@@ -1,7 +1,7 @@
 const Teacher  = require('../models/Teacher')
 
 exports.getAllTeachers = async(req,res)=>{
-    await Teacher.findAll({})
+    await Teacher.find({})
     .then((teachers)=>{
         return res.status(200).send(teachers)
     })

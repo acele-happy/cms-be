@@ -35,5 +35,5 @@ const teacherSchema = mongoose.Schema({
 
 })
 
-const Teacher = new mongoose.Model('Teacher',teacherSchema)
+const Teacher = new mongoose.model('Teacher',teacherSchema)
 module.exports = Teacher
