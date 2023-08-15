@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const teacherSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     fullName :{
         type: String,
         required: true
@@ -39,5 +39,5 @@ const teacherSchema = mongoose.Schema({
     }
 })
 
-const Teacher = new mongoose.model('Teacher',teacherSchema)
-module.exports = Teacher
+const User = new mongoose.model('User',userSchema)
+module.exports = User
