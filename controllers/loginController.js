@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const User  = require('../models/User')
 
 exports.loginUsers = async(req,res)=>{
@@ -30,42 +31,80 @@ exports.loginUsers = async(req,res)=>{
        
       // cp
        if (user.role === 'CP') {
+
+        const token = jwt.sign(
+          { userId: user._id, role: user.role },
+          process.env.SECRETE_KEY, 
+          { expiresIn: '1h' } 
+        );
+
         return res.status(200).json({
-          message:
-            'welcome CP',
+          message: `Welcome ${user.role}`,
+          token: token,
         });
+
       }
 
       // Teacher
        if (user.role === 'TEACHER') {
+
+      const token = jwt.sign(
+          { userId: user._id, role: user.role },
+          process.env.SECRETE_KEY, 
+          { expiresIn: '1h' } 
+        );
+
         return res.status(200).json({
-          message:
-            'welcome TEACHER',
+          message: `Welcome ${user.role}`,
+          token: token,
         });
       }
 
        // ACADEMICS
         if (user.role === 'ACADEMICS') {
+
+       const token = jwt.sign(
+          { userId: user._id, role: user.role },
+          process.env.SECRETE_KEY, 
+          { expiresIn: '1h' } 
+        );
+
         return res.status(200).json({
-          message:
-            'welcome ACADEMICS',
+          message: `Welcome ${user.role}`,
+          token: token,
         });
       }
 
         // HOD
          if (user.role === 'HOD') {
-          return res.status(200).json({
-            message:
-              'welcome HOD',
-          });
+
+         const token = jwt.sign(
+          { userId: user._id, role: user.role },
+          process.env.SECRETE_KEY, 
+          { expiresIn: '1h' } 
+        );
+
+        return res.status(200).json({
+          message: `Welcome ${user.role}`,
+          token: token,
+        });
+
         }
 
           // FINANCE
         if (user.role === 'FINANCE') {
+
+       const token = jwt.sign(
+          { userId: user._id, role: user.role },
+          process.env.SECRETE_KEY, 
+          { expiresIn: '1h' } 
+        );
+
         return res.status(200).json({
-          message:
-            'welcome FINANCE',
+          message: `Welcome ${user.role}`,
+          token: token,
         });
+
       }
 
      
