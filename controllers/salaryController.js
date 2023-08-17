@@ -9,6 +9,10 @@ exports.claimSalary = async(req,res)=>{
     let department;
     if(course == "POLITICAL SCIENCE"){
          department = "POLITICS"
+    }else if(course == "FINANCE"){
+        department="MANAGEMENT"
+    }else if(course =="ADVANCED OOP WITH JAVA"){
+        department= "IT"
     }
 
     const CP = await User.findOne({department:department  , role:"CP"})
@@ -26,10 +30,10 @@ exports.claimSalary = async(req,res)=>{
         { $push: { notifications: savedNotification._id } },
         { new: true }
       );
-      console.log('Updated user:', updatedUser);
-      return res.status(200).send(updatedUser)
+    //   console.log('Updated user:', updatedUser);
+      return res.status(204).send(updatedUser)
     } catch (error) {
-      console.error('Error:', error);
+    //   console.error('Error:', error);
       return res.status(500).send(error);
     }
 
