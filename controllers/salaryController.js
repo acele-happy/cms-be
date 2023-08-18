@@ -7,16 +7,9 @@ exports.claimSalary = async(req,res)=>{
     const teacherId = req.params.id.split(':')[1]
     const teacher = await User.findOne({_id: teacherId})
     const course = teacher.course
-    let department;
-    if(course == "POLITICAL SCIENCE"){
-         department = "POLITICS"
-    }else if(course == "FINANCE"){
-        department="MANAGEMENT"
-    }else if(course =="ADVANCED OOP WITH JAVA"){
-        department= "IT"
-    }
+    const department = teacher.department;
 
-    const CP = await User.findOne({department:department  , role:"CP"})
+    const CP = await User.findOne({department:department  , role:"CP",course: course})
     console.log(CP)
     try{
     const CPNotification = await new Notification({
@@ -32,7 +25,7 @@ exports.claimSalary = async(req,res)=>{
         { new: true }
       );
     //   console.log('Updated user:', updatedUser);
-      return res.status(204).send(updatedUser)
+      return res.status(201).send("Request sent!!")
     } catch (error) {
     //   console.error('Error:', error);
       return res.status(500).send(error);
