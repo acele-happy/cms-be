@@ -44,7 +44,7 @@ const userSchema = mongoose.Schema({
   notifications: {
     type: [Object],
     ref: 'Notification'
-}
+} 
 });
 
 const User = new mongoose.model("User", userSchema);

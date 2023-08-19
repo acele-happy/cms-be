@@ -85,7 +85,7 @@ exports.confirmPaymentHOD = async(req,res)=>{
         const academicNotification = new Notification({
             from: hodId,
             to: academic._id,
-            content: `Hello Academic ${academic.fullName.split(' ')[0]}, I just Approved The payment for Teacher ${teacher.fullName.split(' ')[0]} ,who is in my department claiming  ${teacher.salary} Rwf Salary As they finished teaching the ${teacher.course} course !`
+            content: `Hello Academic ${academic.fullName.split(' ')[0]}, I just Approved The payment for Teacher ${teacher.fullName.split(' ')[0]} ,who is in my department claiming  ${teacher.salary} Rwf Salary As they finished teaching the ${teacher.course} course !${teacher._id}` 
         })
 
         const savedNotification = await academicNotification.save()
@@ -94,4 +94,65 @@ exports.confirmPaymentHOD = async(req,res)=>{
     }catch(err){
         return res.status(500).send(err)
     }
+}
+
+
+exports.confirmPaymentAcademic = async(req,res)=>{
+  try{ 
+  const academicId = req.params.id.split(':')[1]
+  const academic = await User.findOne({_id:academicId})
+  
+
+  const teacherNotId = academic.notifications[academic.notifications.length -1]
+  const not = await Notification.findOne({_id: teacherNotId})
+
+  const teacherId = not.content.split('!')[1]
+  // return res.send(teacherId)
+
+  const teacher = await User.findOne({_id: `${teacherId}`})
+  //academic
+  const finance = await User.findOne({role:"FINANCE"})
+  
+
+  
+      const financeNotification = new Notification({
+          from: academicId,
+          to: finance._id,
+          content: `Hello In charge of finance ${finance.fullName.split(' ')[0]}, I just Approved The payment for Teacher ${teacher.fullName.split(' ')[0]} from HOD in their department, claiming  ${teacher.salary} Rwf Salary As they finished teaching the ${teacher.course} course !${teacher._id}`
+      })
+
+      const savedNotification = await financeNotification.save()
+      const updatedAcademic = await User.findByIdAndUpdate(finance._id,{$push:{notifications: savedNotification._id}}, {new: true})
+      return res.status(200).json({message:"Notification sent!!"})
+  }catch(err){
+      return res.status(500).send(err)
+  }
+}
+
+exports.confirmPaymentFinance = async(req,res)=>{
+  try{
+  const financeId = req.params.id.split(':')[1]
+  const finance = await User.findOne({_id:financeId})
+  
+
+  const teacherNotId = finance.notifications[finance.notifications.length -1]
+  const not = await Notification.findOne({_id: teacherNotId})
+
+  const teacherId = not.content.split('!')[1]
+  // return res.send(teacherId)
+  const teacher = await User.findOne({_id: teacherId})
+ 
+ 
+      const teacherNotification = new Notification({
+          from: financeId,
+          to: teacherId,
+          content: `Hello Lecturer ${teacher.fullName.split(' ')[0]}, Your paymeny has been approved from finance you can now check your email for more details!!`
+      })
+
+      const savedNotification = await teacherNotification.save()
+      const updatedTeacher = await User.findByIdAndUpdate(teacher._id,{$push:{notifications: savedNotification._id}}, {new: true})
+      return res.status(200).json({message:"Notification sent!!"})
+  }catch(err){
+      return res.status(500).send(err)
+  }
 }
