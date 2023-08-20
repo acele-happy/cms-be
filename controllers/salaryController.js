@@ -1,9 +1,10 @@
 const User = require('../models/User')
 const Notification = require('../models/Notification')
+const {sendEmail} = require('../utils/emailConfig')
 
 //teacher claiming salary
 exports.claimSalary = async(req,res)=>{
-
+  try{
     const teacherId = req.params.id.split(':')[1]
     const teacher = await User.findOne({_id: teacherId})
     const course = teacher.course
@@ -11,7 +12,7 @@ exports.claimSalary = async(req,res)=>{
 
     const CP = await User.findOne({department:department  , role:"CP",course: course})
     console.log(CP)
-    try{
+    
     const CPNotification = await new Notification({
         from: teacherId,
         to: CP._id,
@@ -34,6 +35,7 @@ exports.claimSalary = async(req,res)=>{
 }
 
 exports.confirmPaymentCP = async(req,res)=>{
+  try{
     const cpId = req.params.id.split(':')[1]
     const cp = await User.findOne({_id:cpId})
 
@@ -47,7 +49,7 @@ exports.confirmPaymentCP = async(req,res)=>{
     const HOD = await User.findOne({department:department  , role:"HOD"})
     // console.log(HOD)
 
-    try{
+   
         const HODNotification = await new Notification({
             from: cpId,
             to: HOD._id,
@@ -140,8 +142,8 @@ exports.confirmPaymentFinance = async(req,res)=>{
 
   const teacherId = not.content.split('!')[1]
   // return res.send(teacherId)
-  const teacher = await User.findOne({_id: teacherId})
- 
+  const teacher = await User.findOne({_id: teacherId})  
+  
  
       const teacherNotification = new Notification({
           from: financeId,
@@ -150,9 +152,11 @@ exports.confirmPaymentFinance = async(req,res)=>{
       })
 
       const savedNotification = await teacherNotification.save()
-      const updatedTeacher = await User.findByIdAndUpdate(teacher._id,{$push:{notifications: savedNotification._id}}, {new: true})
-      return res.status(200).json({message:"Notification sent!!"})
+      const updatedTeacher = await User.findByIdAndUpdate(teacher._id,{$push:{notifications: savedNotification._id}}, {new: true})  
+
+      sendEmail(teacher.email, "Your payment has been arrived!!",`<h1>YOUR MONTHLY SALARY HAS ARRIVED</h1> <p>fincance is here to tell you that your ${teacher.salary} Rwf has been paid to you enjoy! </p>`)
+      return res.status(200).json({message:"Notification sent!!"})  
   }catch(err){
       return res.status(500).send(err)
   }
-}
+} 
