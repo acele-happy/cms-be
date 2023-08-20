@@ -3,7 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const teacherRoutes = require('./routes/userRoutes')
 const cors = require('cors')
-const corsFunction = require('./utils/cors')
+const {corsFunction} = require('./utils/cors')
 
 require('dotenv').config()
 require('./models/dbConnect')

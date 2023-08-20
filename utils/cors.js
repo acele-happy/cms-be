@@ -1,4 +1,4 @@
-function corsFunction(req, res, next) {
+exports.corsFunction = (req, res, next) =>{
     const allowedOrigins = ['*'];
     const { origin } = req.headers;
     if (allowedOrigins.includes(origin)) {
@@ -11,5 +11,4 @@ function corsFunction(req, res, next) {
     next();
   }
   
-  export default corsFunction;
   
