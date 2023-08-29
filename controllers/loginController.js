@@ -1,116 +1,25 @@
-const jwt = require('jsonwebtoken');
-const User  = require('../models/User')
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+require("dotenv").config();
 
-exports.loginUsers = async(req,res)=>{
+exports.loginUsers = async (req, res) => {
+  try {
 
- 
-   try {
-    
-   const {email,password } = req.body;
+    const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    const passwordMatch= await User.findOne({password});
-
-    if (!email || !password) {
-        return res.status(401).json({
-          message: 'Please provide both email and password',
-        });
-      }
-
-       if (!user) {
-        return res.status(400).json({
-          message: "Invalid Login Credentials"
-        });
-      }
-
-        if (!passwordMatch) {
-        return res.status(400).json({
-             message: 'Invalid Login credentials' 
-            });
-      }
-       
-      // cp
-       if (user.role === 'CP') {
-
-        const token = jwt.sign(
-          { userId: user._id, role: user.role },
-          process.env.SECRETE_KEY, 
-          { expiresIn: '1h' } 
-        );
-
-        return res.status(200).json({
-          message: `Welcome ${user.role}`,
-          token: token,
-        });
-
-      }
-
-      // Teacher
-       if (user.role === 'TEACHER') {
-
+    const user = await User.findOne({ email: email });
+    console.log(user)
+    if (user.password == password) {
       const token = jwt.sign(
-          { userId: user._id, role: user.role },
-          process.env.SECRETE_KEY, 
-          { expiresIn: '1h' } 
-        );
-
-        return res.status(200).json({
-          message: `Welcome ${user.role}`,
-          token: token,
-        });
-      }
-
-       // ACADEMICS
-        if (user.role === 'ACADEMICS') {
-
-       const token = jwt.sign(
-          { userId: user._id, role: user.role },
-          process.env.SECRETE_KEY, 
-          { expiresIn: '1h' } 
-        );
-
-        return res.status(200).json({
-          message: `Welcome ${user.role}`,
-          token: token,
-        });
-      }
-
-        // HOD
-         if (user.role === 'HOD') {
-
-         const token = jwt.sign(
-          { userId: user._id, role: user.role },
-          process.env.SECRETE_KEY, 
-          { expiresIn: '1h' } 
-        );
-
-        return res.status(200).json({
-          message: `Welcome ${user.role}`,
-          token: token,
-        });
-
-        }
-
-          // FINANCE
-        if (user.role === 'FINANCE') {
-
-       const token = jwt.sign(
-          { userId: user._id, role: user.role },
-          process.env.SECRETE_KEY, 
-          { expiresIn: '1h' } 
-        );
-
-        return res.status(200).json({
-          message: `Welcome ${user.role}`,
-          token: token,
-        });
-
-      }
-
-     
+        { id: user._id, email: user.email },
+        process.env.SECRETE_KEY
+      );
+      return res.status(200).send({ token: token, role: user.role }); 
     }
-   catch(err){
-    return res.status(500).send(err)
-   }
 
-}
+    return res.status(401).send("Invalid email or password");
+   
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+};
