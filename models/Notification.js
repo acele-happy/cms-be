@@ -17,7 +17,8 @@ const notificationSchema = mongoose.Schema({
     },
     state:{
         type: String,
-        enum: ["READ","NOTREAD"]
+        enum: ["READ","NOTREAD"],
+        default: "NOTREAD"
     },
     date:{
         type: Date,

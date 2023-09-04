@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Notification = require("../models/Notification")
 
 exports.getAllUsers = async (req, res) => {
     try {
@@ -52,3 +53,19 @@ exports.deleteUser = async (req, res) => {
         return res.status(500).send(err);
     }
 };
+
+exports.pendingNotifications = async(req,res)=>{
+    try{
+        const userId = req.params.id.split(":")[1]
+        const user = await User.findOne({_id:userId})
+        const notificationsId = user.notifications
+        
+        const result = await Notification.find({_id: {$in: notificationsId}, state: "NOTREAD"})
+
+        return res.status(200).send(`${result.length}`)
+
+    }catch(err){
+        console.log(err)
+        return res.status(500).send(err)
+    }
+} 
