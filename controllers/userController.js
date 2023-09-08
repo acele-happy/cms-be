@@ -68,4 +68,34 @@ exports.pendingNotifications = async(req,res)=>{
         console.log(err)
         return res.status(500).send(err)
     }
-} 
+}
+
+exports.manageRequests = async(req,res)=>{
+    try{
+        const userId = req.params.id.split(":")[1]
+        const user = await User.findOne({_id:userId})
+        const notificationIds = user.notifications
+        let notifications=[]
+
+
+
+        for(const notificationId of notificationIds){
+            const notification = await Notification.findOne({_id: notificationId}).lean()
+            if(notification){
+                notifications.push({from: notification.from, message: notification.content,date: notification.date})
+            }
+        }
+        
+        let users = []
+        for(const notificationPiece of notifications){
+            const user = await User.findOne({_id: notificationPiece.from}).lean()
+            if(user){
+            users.push({names: user.fullName, email: user.email, message: notificationPiece.message,phoneNumber: user.phoneNumber, date: notificationPiece.date})
+            }
+        }
+        return res.status(200).send(users)
+    }catch(err){
+        console.log(err)
+        return res.status(500).send(err)
+    }
+}

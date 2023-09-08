@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {getAllUsers,registerUser,getRoleByEmail,deleteUser, pendingNotifications} = require('../controllers/userController')
+const {getAllUsers,registerUser,getRoleByEmail,deleteUser, pendingNotifications, manageRequests} = require('../controllers/userController')
 const {loginUsers} = require('../controllers/loginController')
 const {claimSalary,confirmPaymentCP,confirmPaymentHOD,confirmPaymentAcademic,confirmPaymentFinance} = require('../controllers/salaryController')
 
@@ -15,6 +15,7 @@ router.post('/user/confirmPaymentHOD/:id',confirmPaymentHOD)
 router.post('/user/confirmPaymentAcademic/:id',confirmPaymentAcademic)
 router.post('/user/confirmPaymentFinance/:id',confirmPaymentFinance)
 router.get('/user/pendingNotifications/:id',pendingNotifications)
+router.get('/user/manageRequests/:id',manageRequests)
 
 
 module.exports = router
