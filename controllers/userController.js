@@ -70,6 +70,16 @@ exports.pendingNotifications = async(req,res)=>{
     }
 }
 
+exports.countUsers = async(req,res)=>{
+    try{
+        const count = await User.count()
+        return res.status(200).send(`${count}`) 
+    }catch(err){
+        console.log(err)
+        return res.status(500).send(err)
+    }
+}
+
 exports.manageRequests = async(req,res)=>{
     try{
         const userId = req.params.id.split(":")[1]
@@ -90,7 +100,7 @@ exports.manageRequests = async(req,res)=>{
         for(const notificationPiece of notifications){
             const user = await User.findOne({_id: notificationPiece.from}).lean()
             if(user){
-            users.push({names: user.fullName, email: user.email, message: notificationPiece.message,phoneNumber: user.phoneNumber, date: notificationPiece.date})
+            users.push({names: user.fullName, email: user.email, message: notificationPiece.message,phoneNumber: user.phoneNumber, date: notificationPiece.date })
             }
         }
         return res.status(200).send(users)
