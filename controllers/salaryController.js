@@ -9,15 +9,14 @@ exports.claimSalary = async(req,res)=>{
     const teacher = await User.findOne({_id: teacherId})
     const course = teacher.course
     const department = teacher.department;
-
+    const content = req.body.message
     const CP = await User.findOne({department:department  , role:"CP",course: course})
-    console.log(CP)
     
     const CPNotification = await new Notification({
         from: teacherId,
         to: CP._id,
-        content:`Greetings CP ${CP.fullName.split(' ')[0]}, I would like to remind you that the course I was in charge has been finished and would like to claim the Salary for this course. Thank you!!`
-    })
+        content:content
+    }) 
     
     const savedNotification = await CPNotification.save();
     const updatedUser = await User.findByIdAndUpdate(
