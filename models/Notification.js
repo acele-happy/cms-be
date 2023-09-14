@@ -23,6 +23,26 @@ const notificationSchema = mongoose.Schema({
     date:{
         type: Date,
         default: Date.now()
+    },
+    cp:{
+        type:String,
+        enum:['Pending','Approved'],
+        default:'Pending'
+    },
+    hod:{
+        type:String,
+        enum:['Pending','Approved'],
+        default:'Pending'
+    },
+    academic:{
+        type:String,
+        enum:['Pending','Approved'],
+        default:'Pending'
+    },
+    finance:{
+        type:String,
+        enum:['Pending','Approved'], 
+        default:'Pending'
     }
 })
 

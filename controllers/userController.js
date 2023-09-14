@@ -92,7 +92,7 @@ exports.manageRequests = async(req,res)=>{
         for(const notificationId of notificationIds){
             const notification = await Notification.findOne({_id: notificationId}).lean()
             if(notification){
-                notifications.push({from: notification.from, message: notification.content,date: notification.date})
+                notifications.push({from: notification.from, message: notification.content,date: notification.date,hod: notification.hod,cp:notification.cp,academic:notification.academic,finance:notification.finance,id:notification._id})
             }
         }
         
@@ -100,7 +100,7 @@ exports.manageRequests = async(req,res)=>{
         for(const notificationPiece of notifications){
             const user = await User.findOne({_id: notificationPiece.from}).lean()
             if(user){
-            users.push({names: user.fullName, email: user.email, message: notificationPiece.message,phoneNumber: user.phoneNumber, date: notificationPiece.date })
+            users.push({names: user.fullName, email: user.email, message: notificationPiece.message,phoneNumber: user.phoneNumber, date: notificationPiece.date ,cp:notificationPiece.cp,hod:notificationPiece.hod,academic:notificationPiece.academic,finance:notificationPiece.finance,notId:notificationPiece.id})
             }
         }
         return res.status(200).send(users)
