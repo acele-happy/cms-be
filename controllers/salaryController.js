@@ -76,13 +76,18 @@ exports.confirmPaymentCP = async(req,res)=>{
 exports.confirmPaymentHOD = async(req,res)=>{
    try{
     const notId = req.params.id.split(':')[1]
+    const check = await Notification.findOne({_id:notId})
 
+    if(check.cp==="Approved"){
     const notification = await Notification.findByIdAndUpdate(notId,{hod:"Approved"},{new:true})
     if(!notification){
       return res.status(404).send("Notification doesnt exist")
     }
 
     return res.status(200).send("Approved")
+  }else{
+    return res.status(400).send("CP has to approve first")
+  }
     }catch(err){
         return res.status(500).send(err)
     }
@@ -92,6 +97,9 @@ exports.confirmPaymentHOD = async(req,res)=>{
 exports.confirmPaymentAcademic = async(req,res)=>{
   try{ 
     const notId = req.params.id.split(':')[1]
+    const check = await Notification.findOne({_id:notId})
+
+    if(check.cp==="Approved"&& check.hod==="Approved"){
 
     const notification = await Notification.findByIdAndUpdate(notId,{academic:"Approved"},{new:true})
     if(!notification){
@@ -99,6 +107,9 @@ exports.confirmPaymentAcademic = async(req,res)=>{
     }
 
     return res.status(200).send("Approved")
+  }else{
+    return res.status(400).send("HOD has to approve first!")
+  }
   }catch(err){
       return res.status(500).send(err)
   }
@@ -108,6 +119,10 @@ exports.confirmPaymentFinance = async(req,res)=>{
   try{
     const notId = req.params.id.split(':')[1]
 
+    const check = await Notification.findOne({_id:notId})
+
+    if(check.cp === "Approved" && check.hod==="Approved" && check.academic==="Approved"){
+
     const notification = await Notification.findByIdAndUpdate(notId,{finance:"Approved"},{new:true})
     if(!notification){
       return res.status(404).send("Notification doesnt exist")
@@ -116,8 +131,12 @@ exports.confirmPaymentFinance = async(req,res)=>{
     const lecturer = await User.findOne({_id:not.from})
 
       sendEmail(lecturer.email, "Your payment has been arrived!!",`<h1>YOUR MONTHLY SALARY HAS ARRIVED</h1> <p>fincance is here to tell you that your ${lecturer.salary} Rwf has been paid to you enjoy! </p>`)
+      await Notification.findByIdAndUpdate(notId,{status:"READ"},{new:true})
       return res.status(200).send("Approved")  
+  }else{
+    return res.status(400).send("Academic has to Approve First!")
+  }
   }catch(err){
       return res.status(500).send(err)
-  }
+  } 
 } 
