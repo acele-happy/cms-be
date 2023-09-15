@@ -15,6 +15,12 @@ exports.claimSalary = async(req,res)=>{
     const academic = await User.findOne({role:"ACADEMICS"})
     const finance = await User.findOne({role:"FINANCE"})
     
+
+    const notification = await Notification.findOne({from: teacherId,state:"NOTREAD"})
+    if(notification){
+      return res.status(400).send("You can't send request when you have another which is not approved yet!")
+    }
+
     const CPNotification = await new Notification({
         from: teacherId,
         to: CP._id,
@@ -131,7 +137,7 @@ exports.confirmPaymentFinance = async(req,res)=>{
     const lecturer = await User.findOne({_id:not.from})
 
       sendEmail(lecturer.email, "Your payment has been arrived!!",`<h1>YOUR MONTHLY SALARY HAS ARRIVED</h1> <p>fincance is here to tell you that your ${lecturer.salary} Rwf has been paid to you enjoy! </p>`)
-      await Notification.findByIdAndUpdate(notId,{status:"READ"},{new:true})
+      await Notification.findByIdAndUpdate(notId,{state:"READ"},{new:true})
       return res.status(200).send("Approved")  
   }else{
     return res.status(400).send("Academic has to Approve First!")
