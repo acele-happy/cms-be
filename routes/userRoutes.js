@@ -1,10 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const {getAllUsers,registerUser,getRoleByEmail,deleteUser, pendingNotifications, manageRequests, countUsers} = require('../controllers/userController')
+const {getAllUsers,registerUser,getRoleByEmail,deleteUser, pendingNotifications, manageRequests, countUsers, getUserById} = require('../controllers/userController')
 const {loginUsers} = require('../controllers/loginController')
 const {claimSalary,confirmPaymentCP,confirmPaymentHOD,confirmPaymentAcademic,confirmPaymentFinance} = require('../controllers/salaryController')
 
 router.get('/user/getAllUsers',getAllUsers)
+router.get('/user/getUserById/:id',getUserById)
 router.post('/user/register',registerUser)
 router.get('/user/getRole',getRoleByEmail)
 router.delete('/user/delete/:id',deleteUser)

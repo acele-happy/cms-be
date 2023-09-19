@@ -34,7 +34,7 @@ const userSchema = mongoose.Schema({
   role: {
     type: String,
     enum: ["ACADEMICS", "LECTURER", "HOD", "CP", "FINANCE"],
-    required: true,
+    required: true, 
   },
   //this could be the charge of CP or charge of HOD depending on role of the user
   department: {

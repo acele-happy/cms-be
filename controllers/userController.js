@@ -10,6 +10,18 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
+exports.getUserById = async(req,res)=>{
+    try{
+        const id = req.params.id
+        const user = await User.findOne({_id:id})
+        if(user){
+            return res.status(200).send(user)
+        }
+    }catch(err){
+        return res.status(500).send(err)
+    }
+}
+
 exports.registerUser = async (req, res) => {
     const user = req.body;
 
