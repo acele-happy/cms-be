@@ -6,7 +6,11 @@ const {sendEmail} = require('../utils/emailConfig')
 exports.claimSalary = async(req,res)=>{
   try{
     const teacherId = req.params.id.split(':')[1]
-    const teacher = await User.findOne({_id: teacherId})
+    const teacher = await User.findOne({ _id: teacherId })
+
+    if (!teacher) {
+      return res.status(404).send("Teacher not found");
+    }
     const course = teacher.course
     const department = teacher.department;
     const content = req.body.message
@@ -15,7 +19,7 @@ exports.claimSalary = async(req,res)=>{
     const academic = await User.findOne({role:"ACADEMICS"})
     const finance = await User.findOne({role:"FINANCE"})
     
-
+    
     const notification = await Notification.findOne({from: teacherId,state:"NOTREAD"})
     if(notification){
       return res.status(400).send("You can't send request when you have another which is not approved yet!")
@@ -136,7 +140,23 @@ exports.confirmPaymentFinance = async(req,res)=>{
     const not = await Notification.findOne({_id:notId})
     const lecturer = await User.findOne({_id:not.from})
 
-      sendEmail(lecturer.email, "Your payment has been arrived!!",`<h1>YOUR MONTHLY SALARY HAS ARRIVED</h1> <p>fincance is here to tell you that your ${lecturer.salary} Rwf has been paid to you enjoy! </p>`)
+      sendEmail(lecturer.email,
+        "Payment Confirmation", `<h4>Dear Sir/Madam</h1> 
+        <p>I hope this email finds you well. I am writing to inform you that the payment you were
+        expecting has been successfully deposited into your account
+        Payment Amount:
+        ${lecturer.salary} Rwf</p> 
+        <p>Please feel free to check your account balance to verify the funds have been credited
+         accordingly. If you have any questions or require further assistance, please do not hesitate to 
+         reach out to our customer support team at +243 998 876 598.
+
+        Thank you for your prompt attention to this matter. We appreciate your
+        business and look forward to serving you in the future.</p> ,
+        <p> Best regards,
+
+        ISTM -GOMA
+        +243 998 876 598<p/>`)
+      
       await Notification.findByIdAndUpdate(notId,{state:"READ"},{new:true})
       return res.status(200).send("Approved")  
   }else{

@@ -123,25 +123,31 @@ exports.manageRequests = async(req,res)=>{
 }
 
 exports.searchByDate = async(req,res)=>{
-    try{
-        const from = req.body.from
-        const to = req.body.to
-        console.log(from)
-        const notifications = await Notification.find({
-            date: {
-              $gte: from, // Greater than or equal to "fromDate"
-              $lte: to,   // Less than or equal to "toDate"
-            },
-          });
-      
-        //   if(notifications){  
-            return res.status(200).send(notifications);    
-        //   }
-    }catch(err){
-        return res.status(500).send(err)
-    }
+    try {
+        const { fromDate, toDate } = req.body;
+        const fromIsoDate = `${new Date().getFullYear()}-${fromDate}`;
+        const toIsoDate = `${new Date().getFullYear()}-${toDate}`
+        
 
+        const to = new Date(toIsoDate)
+        to.setHours(25,59,59,0)
     
+        const notifications = await Notification.aggregate([
+          {
+            $match: {
+              date: {
+                $gte: new Date(fromIsoDate),
+                $lte: new Date(to),
+              },
+            },
+          },
+        ]);
+    
+        return res.status(200).send(notifications);
+      } catch (error) {
+        console.error('Error retrieving notifications:', error);
+        return res.status(500).send(error);
+      }    
 }
 
 exports.updateUserById = async(req,res)=>{
