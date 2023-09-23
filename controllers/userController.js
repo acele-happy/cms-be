@@ -121,3 +121,43 @@ exports.manageRequests = async(req,res)=>{
         return res.status(500).send(err)
     }
 }
+
+exports.searchByDate = async(req,res)=>{
+    try{
+        const from = req.body.from
+        const to = req.body.to
+        console.log(from)
+        const notifications = await Notification.find({
+            date: {
+              $gte: from, // Greater than or equal to "fromDate"
+              $lte: to,   // Less than or equal to "toDate"
+            },
+          });
+      
+        //   if(notifications){  
+            return res.status(200).send(notifications);    
+        //   }
+    }catch(err){
+        return res.status(500).send(err)
+    }
+
+    
+}
+
+exports.updateUserById = async(req,res)=>{
+    const id = req.params.id.split(':')[1]
+    console.log(id)
+    const updates = req.body
+
+    try {
+    const user = await User.findByIdAndUpdate(id, updates, { new: true });
+    
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    return res.status(200).send(user);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}

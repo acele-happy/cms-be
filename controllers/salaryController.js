@@ -10,7 +10,7 @@ exports.claimSalary = async(req,res)=>{
     const course = teacher.course
     const department = teacher.department;
     const content = req.body.message
-    const CP = await User.findOne({department:department  , role:"CP",course: course})
+    const CP = await User.findOne({department:department,role:"CP",course:course})
     const HOD = await User.findOne({department:department,role:'HOD'})
     const academic = await User.findOne({role:"ACADEMICS"})
     const finance = await User.findOne({role:"FINANCE"})
@@ -56,7 +56,7 @@ exports.claimSalary = async(req,res)=>{
     //   console.log('Updated user:', updatedUser);
       return res.status(201).send("Request sent!!")
     } catch (error) {
-    //   console.error('Error:', error);
+      console.log(error)
       return res.status(500).send(error);
     }
 

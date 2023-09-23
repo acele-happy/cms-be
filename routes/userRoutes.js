@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {getAllUsers,registerUser,getRoleByEmail,deleteUser, pendingNotifications, manageRequests, countUsers, getUserById} = require('../controllers/userController')
+const {getAllUsers,registerUser,getRoleByEmail,deleteUser, pendingNotifications, manageRequests, countUsers, getUserById, searchByDate, updateUserById} = require('../controllers/userController')
 const {loginUsers} = require('../controllers/loginController')
 const {claimSalary,confirmPaymentCP,confirmPaymentHOD,confirmPaymentAcademic,confirmPaymentFinance} = require('../controllers/salaryController')
 
@@ -18,6 +18,8 @@ router.post('/user/confirmPaymentFinance/:id',confirmPaymentFinance)
 router.get('/user/pendingNotifications/:id',pendingNotifications)
 router.get('/user/manageRequests/:id',manageRequests)
 router.get('/user/countUsers',countUsers)
+router.post('/user/searchByDate',searchByDate)
+router.patch('/user/updateById/:id',updateUserById)
 
- 
+  
 module.exports = router
