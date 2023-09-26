@@ -125,25 +125,30 @@ exports.manageRequests = async(req,res)=>{
 exports.searchByDate = async(req,res)=>{
     try {
         const { fromDate, toDate } = req.body;
-        const fromIsoDate = `${new Date().getFullYear()}-${fromDate}`;
-        const toIsoDate = `${new Date().getFullYear()}-${toDate}`
-        
-
-        const to = new Date(toIsoDate)
+        const to = new Date(toDate)
         to.setHours(25,59,59,0)
+        console.log(to)
     
         const notifications = await Notification.aggregate([
           {
             $match: {
               date: {
-                $gte: new Date(fromIsoDate),
+                $gte: new Date(fromDate),
                 $lte: new Date(to),
               },
             },
           },
         ]);
-    
-        return res.status(200).send(notifications);
+
+        let users = []
+        for(const notificationPiece of notifications){
+            const user = await User.findOne({_id: notificationPiece.from})
+            if(user){
+            users.push({names: user.fullName, email: user.email, message: notificationPiece.content,phoneNumber: user.phoneNumber, date: notificationPiece.date ,cp:notificationPiece.cp,hod:notificationPiece.hod,academic:notificationPiece.academic,finance:notificationPiece.finance,notId:notificationPiece.id})
+            }
+        }
+     
+        return res.status(200).send(users);
       } catch (error) {
         console.error('Error retrieving notifications:', error);
         return res.status(500).send(error);
